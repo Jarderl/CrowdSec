@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d">
+  <title id="t">CrowdSec: detectar, decidir e bloquear</title>
+  <desc id="d">O CrowdSec lê os logs do Nginx Proxy Manager e do SSH, aplica cenários de ataque, grava as decisões na API local e o bouncer de firewall bloqueia o IP no host. A blocklist da comunidade alimenta as decisões. Para portas de containers, o bloqueio precisa da cadeia DOCKER-USER ou do hook forward.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#121c33"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.32" r="0.6">
+      <stop offset="0" stop-color="#f43f5e" stop-opacity="0.09"/>
+      <stop offset="1" stop-color="#f43f5e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16213a"/>
+      <stop offset="1" stop-color="#111a2e"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#1b2742" stroke-width="1"/>
+    </pattern>
+    <marker id="fwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#fb7185"/>
+    </marker>
+    <marker id="soft" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      text { font-family: Inter, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .mono, .mono text { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "DejaVu Sans Mono", monospace; }
+      .h { fill: #f1f5f9; font-weight: 700; }
+      .p { fill: #cbd5e1; font-size: 13px; }
+      .s { fill: #94a3b8; }
+      .flow { stroke: #fb7185; stroke-width: 2.4; fill: none; stroke-dasharray: 6 6; animation: run 1.2s linear infinite; }
+      .ret { stroke: #94a3b8; stroke-width: 2; fill: none; stroke-linejoin: round; }
+      @keyframes run { to { stroke-dashoffset: -24; } }
+    </style>
+  </defs>
+
+  <!-- fundo -->
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect width="1280" height="720" fill="url(#grid)" opacity="0.55"/>
+  <rect width="1280" height="720" fill="url(#halo)"/>
+
+  <!-- cabeçalho -->
+  <text x="36" y="66" class="h" font-size="34">CrowdSec</text>
+  <text x="36" y="96" class="s" font-size="15">Lê os logs, reconhece o ataque e bloqueia o IP no firewall do servidor</text>
+  <g transform="translate(1024 42)">
+    <rect width="220" height="32" rx="16" fill="#2a0f17" stroke="#f43f5e" stroke-opacity="0.6"/>
+    <text x="110" y="21" text-anchor="middle" class="mono" font-size="12.5" fill="#fda4af">$ cscli decisions list</text>
+  </g>
+
+  <!-- setas do fluxo -->
+  <g>
+    <path class="flow" d="M301 236H345" marker-end="url(#fwd)"/>
+    <path class="flow" d="M616 236H660" marker-end="url(#fwd)"/>
+    <path class="flow" d="M931 236H975" marker-end="url(#fwd)"/>
+    <text x="323" y="222" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#fda4af">lê</text>
+    <text x="638" y="222" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#fda4af">decide</text>
+    <text x="953" y="222" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#fda4af">aplica</text>
+  </g>
+
+  <!-- 1. Logs -->
+  <g transform="translate(36 150)">
+    <rect width="263" height="180" rx="16" fill="url(#card)" stroke="#2a3756"/>
+    <rect x="18" width="227" height="3" rx="1.5" fill="#fbbf24"/>
+    <circle cx="44" cy="46" r="22" fill="#fbbf24" fill-opacity="0.12" stroke="#fbbf24" stroke-opacity="0.5"/>
+    <g fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M36 35H48L53 40V57H36Z"/>
+      <path d="M40 44H49M40 49H49M40 53H45"/>
+    </g>
+    <text x="78" y="42" class="h" font-size="16">Logs</text>
+    <text x="78" y="60" class="mono" font-size="11" fill="#fbbf24">acquis.yaml</text>
+    <text x="22" y="104" class="p">Acessos do Nginx Proxy Manager</text>
+    <text x="22" y="124" class="p">e logins do SSH.</text>
+    <text x="22" y="156" class="mono" font-size="11.5" fill="#94a3b8">/var/log/npm · auth.log</text>
+  </g>
+
+  <!-- 2. Security Engine -->
+  <g transform="translate(351 150)">
+    <rect width="263" height="180" rx="16" fill="url(#card)" stroke="#2a3756"/>
+    <rect x="18" width="227" height="3" rx="1.5" fill="#a78bfa"/>
+    <circle cx="44" cy="46" r="22" fill="#a78bfa" fill-opacity="0.12" stroke="#a78bfa" stroke-opacity="0.5"/>
+    <g fill="none" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="42" cy="44" r="7"/>
+      <path d="M47 49L54 56"/>
+    </g>
+    <text x="78" y="42" class="h" font-size="16">Detecção</text>
+    <text x="78" y="60" class="mono" font-size="11" fill="#a78bfa">Security Engine</text>
+    <text x="22" y="104" class="p">Parsers entendem o log; cenários</text>
+    <text x="22" y="124" class="p">reconhecem o padrão de ataque.</text>
+    <text x="22" y="156" class="mono" font-size="11.5" fill="#94a3b8">força bruta · scan · CVE</text>
+  </g>
+
+  <!-- 3. LAPI -->
+  <g transform="translate(666 150)">
+    <rect width="263" height="180" rx="16" fill="url(#card)" stroke="#2a3756"/>
+    <rect x="18" width="227" height="3" rx="1.5" fill="#38bdf8"/>
+    <circle cx="44" cy="46" r="22" fill="#38bdf8" fill-opacity="0.12" stroke="#38bdf8" stroke-opacity="0.5"/>
+    <g fill="none" stroke="#7dd3fc" stroke-width="2">
+      <ellipse cx="44" cy="38" rx="10" ry="4"/>
+      <path d="M34 38V53C34 55.5 38.5 57 44 57C49.5 57 54 55.5 54 53V38"/>
+      <path d="M34 45.5C34 48 38.5 49.5 44 49.5C49.5 49.5 54 48 54 45.5"/>
+    </g>
+    <text x="78" y="42" class="h" font-size="16">Decisões</text>
+    <text x="78" y="60" class="mono" font-size="11" fill="#38bdf8">LAPI · 127.0.0.1:8080</text>
+    <text x="22" y="104" class="p">"Banir este IP por 4 horas",</text>
+    <text x="22" y="124" class="p">guardado na API local.</text>
+    <text x="22" y="156" class="mono" font-size="11.5" fill="#94a3b8">cscli alerts list</text>
+  </g>
+
+  <!-- 4. Bouncer -->
+  <g transform="translate(981 150)">
+    <rect width="263" height="180" rx="16" fill="url(#card)" stroke="#f43f5e" stroke-opacity="0.55"/>
+    <rect x="18" width="227" height="3" rx="1.5" fill="#f43f5e"/>
+    <circle cx="44" cy="46" r="22" fill="#f43f5e" fill-opacity="0.14" stroke="#f43f5e" stroke-opacity="0.6"/>
+    <g fill="none" stroke="#fda4af" stroke-width="2" stroke-linecap="round">
+      <circle cx="44" cy="46" r="10"/>
+      <path d="M37 39L51 53"/>
+    </g>
+    <text x="78" y="42" class="h" font-size="16">Bouncer</text>
+    <text x="78" y="60" class="mono" font-size="11" fill="#f43f5e">firewall do host</text>
+    <text x="22" y="104" class="p">Bloqueia o IP no iptables ou</text>
+    <text x="22" y="124" class="p">nftables, antes do serviço.</text>
+    <text x="22" y="156" class="mono" font-size="11.5" fill="#94a3b8">sem bouncer, nada bloqueia</text>
+  </g>
+
+  <!-- comunidade e console -->
+  <g transform="translate(36 362)">
+    <rect width="590" height="78" rx="14" fill="#0f1a2e" stroke="#2a3756"/>
+    <g transform="translate(40 39)" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round">
+      <circle cx="-6" cy="-4" r="5"/><circle cx="8" cy="-4" r="5"/>
+      <path d="M-16 12C-15 6 -11 3 -6 3C-1 3 3 6 4 12M2 12C3 6 6 3 8 3C13 3 17 6 18 12"/>
+    </g>
+    <text x="74" y="32" class="h" font-size="14">Blocklist da comunidade</text>
+    <text x="74" y="54" class="s" font-size="12.5">IPs reportados por outros servidores chegam prontos à LAPI</text>
+  </g>
+  <g transform="translate(654 362)">
+    <rect width="590" height="78" rx="14" fill="#0f1a2e" stroke="#2a3756"/>
+    <g transform="translate(40 39)" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round">
+      <rect x="-15" y="-11" width="30" height="20" rx="3"/>
+      <path d="M-15 -5H15M-6 13H6"/>
+    </g>
+    <text x="74" y="32" class="h" font-size="14">Console app.crowdsec.net</text>
+    <text x="74" y="54" class="s" font-size="12.5">alertas e decisões no navegador (opcional, com cscli console enroll)</text>
+  </g>
+  <path class="ret" d="M330 362V346H798V336" marker-end="url(#soft)"/>
+
+  <!-- painel: onde o bloqueio atua -->
+  <g transform="translate(36 474)">
+    <rect width="590" height="206" rx="16" fill="#0f1a2e" stroke="#2a3756"/>
+    <text x="22" y="36" class="h" font-size="16">Onde o bloqueio precisa atuar</text>
+
+    <!-- internet -->
+    <g transform="translate(22 76)">
+      <rect width="96" height="92" rx="10" fill="#94a3b8" fill-opacity="0.06" stroke="#475569"/>
+      <text x="48" y="42" text-anchor="middle" class="mono" font-size="12" fill="#e2e8f0">IP</text>
+      <text x="48" y="60" text-anchor="middle" class="mono" font-size="12" fill="#e2e8f0">atacante</text>
+    </g>
+    <!-- cadeias -->
+    <path d="M118 100H170M118 144H170" stroke="#64748b" stroke-width="2"/>
+    <g class="mono" font-size="12" text-anchor="middle">
+      <g transform="translate(172 80)">
+        <rect width="170" height="38" rx="8" fill="#f43f5e" fill-opacity="0.10" stroke="#f43f5e" stroke-opacity="0.6"/>
+        <text x="85" y="24" fill="#fda4af">INPUT · input</text>
+      </g>
+      <g transform="translate(172 126)">
+        <rect width="170" height="38" rx="8" fill="#f43f5e" fill-opacity="0.18" stroke="#f43f5e"/>
+        <text x="85" y="24" fill="#fda4af">DOCKER-USER · forward</text>
+      </g>
+    </g>
+    <path d="M342 100H392M342 144H392" stroke="#64748b" stroke-width="2"/>
+    <g class="mono" font-size="12" text-anchor="middle">
+      <g transform="translate(394 80)">
+        <rect width="172" height="38" rx="8" fill="#34d399" fill-opacity="0.10" stroke="#34d399" stroke-opacity="0.6"/>
+        <text x="86" y="24" fill="#e2e8f0">SSH do host</text>
+      </g>
+      <g transform="translate(394 126)">
+        <rect width="172" height="38" rx="8" fill="#34d399" fill-opacity="0.10" stroke="#34d399" stroke-opacity="0.6"/>
+        <text x="86" y="24" fill="#e2e8f0">NPM :80/:443</text>
+      </g>
+    </g>
+    <text x="294" y="190" text-anchor="middle" class="s" font-size="12">Containers não passam pelo INPUT: sem a segunda linha, o NPM fica exposto</text>
+  </g>
+
+  <!-- painel: comandos -->
+  <g transform="translate(654 474)">
+    <rect width="590" height="206" rx="16" fill="#0f1a2e" stroke="#2a3756"/>
+    <text x="22" y="36" class="h" font-size="16">Comandos do dia a dia</text>
+    <text x="22" y="56" class="mono" font-size="11" fill="#64748b">docker exec crowdsec ...</text>
+    <g class="mono" font-size="12.5">
+      <g transform="translate(22 70)">
+        <circle cx="12" cy="12" r="12" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e"/>
+        <text x="12" y="16.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fda4af">1</text>
+        <text x="36" y="17" fill="#e2e8f0">cscli decisions list</text>
+        <text x="300" y="17" fill="#64748b"># IPs bloqueados</text>
+      </g>
+      <g transform="translate(22 102)">
+        <circle cx="12" cy="12" r="12" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e"/>
+        <text x="12" y="16.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fda4af">2</text>
+        <text x="36" y="17" fill="#e2e8f0">cscli alerts list</text>
+        <text x="300" y="17" fill="#64748b"># ataques detectados</text>
+      </g>
+      <g transform="translate(22 134)">
+        <circle cx="12" cy="12" r="12" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e"/>
+        <text x="12" y="16.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fda4af">3</text>
+        <text x="36" y="17" fill="#e2e8f0">cscli decisions delete --ip X</text>
+        <text x="300" y="17" fill="#64748b"># desbloqueia</text>
+      </g>
+      <g transform="translate(22 166)">
+        <circle cx="12" cy="12" r="12" fill="#f43f5e" fill-opacity="0.15" stroke="#f43f5e"/>
+        <text x="12" y="16.5" text-anchor="middle" font-size="12" font-weight="700" fill="#fda4af">4</text>
+        <text x="36" y="17" fill="#e2e8f0">cscli hub upgrade</text>
+        <text x="300" y="17" fill="#64748b"># atualiza cenários</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- rodapé -->
+  <text x="640" y="706" text-anchor="middle" class="mono" font-size="11" fill="#475569">github.com/Jarderl/CrowdSec</text>
+</svg>

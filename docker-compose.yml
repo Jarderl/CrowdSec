@@ -1,0 +1,35 @@
+# =====================================================================
+#  CrowdSec — motor de detecção (Security Engine) em Docker
+#
+#  Lê os logs do Nginx Proxy Manager e do SSH, detecta comportamento
+#  malicioso e publica as decisões na API local (LAPI). Quem bloqueia
+#  de fato é o firewall bouncer instalado no host (ver README).
+# =====================================================================
+
+name: crowdsec
+
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:${CROWDSEC_TAG:-latest}
+    container_name: crowdsec
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:-America/Sao_Paulo}
+      # Coleções instaladas no primeiro start (parsers + cenários)
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/sshd crowdsecurity/nginx-proxy-manager"
+    ports:
+      # LAPI só no próprio servidor: é por aqui que o bouncer consulta as decisões
+      - "127.0.0.1:${LAPI_PORT:-8080}:8080"
+    volumes:
+      # O que ler e de que tipo é cada log
+      - ./acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      # Configuração e banco de decisões (obrigatório persistir desde a 1.7)
+      - crowdsec-config:/etc/crowdsec
+      - crowdsec-db:/var/lib/crowdsec/data
+      # Logs lidos (somente leitura)
+      - ${NPM_LOGS:?defina NPM_LOGS no .env}:/var/log/npm:ro
+      - /var/log/auth.log:/var/log/auth.log:ro
+
+volumes:
+  crowdsec-config:
+  crowdsec-db:

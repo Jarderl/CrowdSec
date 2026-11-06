@@ -1,0 +1,11 @@
+# Logs do Nginx Proxy Manager (acessos e erros de todos os proxy hosts)
+filenames:
+  - /var/log/npm/*.log
+labels:
+  type: nginx-proxy-manager
+---
+# Tentativas de login no SSH do servidor
+filenames:
+  - /var/log/auth.log
+labels:
+  type: syslog

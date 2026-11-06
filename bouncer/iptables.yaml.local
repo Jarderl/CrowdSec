@@ -1,0 +1,12 @@
+# Variante para o pacote crowdsec-firewall-bouncer-iptables.
+# Copie para /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml.local
+
+api_url: http://127.0.0.1:8080/
+api_key: COLE_AQUI_A_CHAVE_GERADA_PELO_CSCLI
+
+# INPUT protege os serviços do próprio host (ex.: SSH).
+# DOCKER-USER é obrigatório para proteger portas publicadas por containers,
+# como o 80/443 do Nginx Proxy Manager.
+iptables_chains:
+  - INPUT
+  - DOCKER-USER
